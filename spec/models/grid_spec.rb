@@ -58,4 +58,24 @@ describe Grid do
     expect(grid.tokens_in_box(1,1,3,3)[0]).to be_a(Token)
   end
 
+  it 'is fast' do
+    require 'benchmark'
+    grid = Grid.new(1_000_000, 1_000_000)
+    grid.add_token(999999,999999)
+    grid.add_token(10,10)
+    grid.add_token(12,12)
+
+    # Single token
+    x = Benchmark.measure do
+      grid.token_at(999999,999999)
+    end
+    expect(x.total).to be < 0.00005 # one twentieth of a millisecond
+
+    # small box
+    x = Benchmark.measure do
+      grid.tokens_in_box(10,10, 12,12)
+    end
+    expect(x.total).to be < 0.00005 # one twentieth of a millisecond
+  end
+
 end

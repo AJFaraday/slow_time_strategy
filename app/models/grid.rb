@@ -10,22 +10,40 @@ class Grid
     @tokens = []
   end
 
-  def add_token(x, y)
-    token = Token.new(x, y)
+  def add_token(x, y, type=nil, owner=Player.new)
+    token = (type || Token).new(x, y, owner, self)
 
     check_token(token)
+    owner.tokens << token
     @tokens << token
+    add_token_to_indexes(token)
+    token
+  end
 
-    # add token to indexes
-    @x_index[token.x] ||= []
-    @x_index[token.x] << token
+  def remove_token(x, y)
+    token = token_at(x, y)
+    @x_index[x].delete(token)
+    @y_index[y].delete(token)
+    @tokens -= [token]
+  end
 
-    @y_index[token.y] ||= []
-    @y_index[token.y] << token
+  def place_token(token, x, y)
+    token.x = x
+    token.y = y
+    add_token_to_indexes(token)
+  end
+
+  def move_token(x1, y1, x2, y2)
+    token = token_at(x1, y1)
+    if token
+      remove_token(x1, y1)
+      place_token(token, x2, y2)
+      check_token(token)
+    end
   end
 
   def token_at(x, y)
-    tokens = @x_index[x] & @y_index[y]
+    tokens = (@x_index[x] || []) & (@y_index[y] || [])
     tokens ? tokens[0] : false
   end
 
@@ -37,6 +55,14 @@ class Grid
 
   private
 
+  def add_token_to_indexes(token)
+    @x_index[token.x] ||= []
+    @x_index[token.x] << token
+
+    @y_index[token.y] ||= []
+    @y_index[token.y] << token
+  end
+
   def check_token(token)
     errors = []
     if token.x < 0 || token.x >= x_size
@@ -45,7 +71,7 @@ class Grid
     if token.y < 0 || token.y >= y_size
       errors << "#{token.y} is out of y range (#{y_size})"
     end
-    if token_at(token.x, token.y)
+    if token_at(token.x, token.y) && token_at(token.x, token.y) != token
       errors << "There is already a token at #{token.x}:#{token.y}"
     end
     if errors.any?

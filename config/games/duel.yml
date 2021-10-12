@@ -1,0 +1,9 @@
+x_size: 15
+y_size: 10
+starting_positions:
+  -
+    x: 2
+    y: 2
+  -
+    x: 12
+    y: 7

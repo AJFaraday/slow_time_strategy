@@ -69,13 +69,46 @@ describe Grid do
     x = Benchmark.measure do
       grid.token_at(999999,999999)
     end
-    expect(x.total).to be < 0.00005 # one twentieth of a millisecond
+    expect(x.total).to be < 0.00005
 
     # small box
     x = Benchmark.measure do
       grid.tokens_in_box(10,10, 12,12)
     end
-    expect(x.total).to be < 0.00005 # one twentieth of a millisecond
+    expect(x.total).to be < 0.00005
+  end
+
+  it 'removes a token from the grid' do
+    grid.add_token(1,2)
+    grid.add_token(2,1)
+    grid.add_token(2,2)
+    expect(grid.tokens.count).to eq(3)
+    expect(grid.token_at(2,2)).to be_a(Token)
+    expect(grid.instance_variable_get(:@x_index).compact.count).to eq(2)
+    expect(grid.instance_variable_get(:@y_index).compact.count).to eq(2)
+
+    grid.remove_token(2,2)
+    expect(grid.tokens.count).to eq(2)
+    expect(grid.token_at(2,2)).to be_nil
+    expect(grid.instance_variable_get(:@x_index)[2].compact.count).to eq(1)
+    expect(grid.instance_variable_get(:@y_index)[2].compact.count).to eq(1)
+  end
+
+  it 'moves a token round the grid' do
+    grid.add_token(2,2)
+    expect(grid.token_at(2,2)).to be_a(Token)
+    expect(grid.token_at(2,3)).to be_nil
+
+    grid.move_token(2,2, 2,3)
+    expect(grid.token_at(2,2)).to be_nil
+    expect(grid.token_at(2,3)).to be_a(Token)
+  end
+
+  it "doesn't move a token on top of another token" do
+    grid.add_token(1,1)
+    grid.add_token(2,2)
+
+    expect{grid.move_token(1,1,2,2)}.to raise_error('Can not add token: There is already a token at 2:2')
   end
 
 end

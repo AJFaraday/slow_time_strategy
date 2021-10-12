@@ -17,9 +17,7 @@ describe Player do
     expect(player.tokens.count).to eq(1)
 
     expect{player.calculate_movement}.to raise_error("calculate_movement called on Token, should be City or Walker")
-    expect{player.enact_damage}.to raise_error("enact_damage called on Token, should be City or Walker")
     expect{player.calculate_damage}.to raise_error("calculate_damage called on Token, should be City or Walker")
-    expect{player.enact_damage}.to raise_error("enact_damage called on Token, should be City or Walker")
   end
 
 end

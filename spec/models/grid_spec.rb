@@ -111,4 +111,10 @@ describe Grid do
     expect{grid.move_token(1,1,2,2)}.to raise_error('Can not add token: There is already a token at 2:2')
   end
 
+  it "Doesn't move a token out of the grid"do
+    grid.add_token(1,1)
+
+    expect{grid.move_token(1,1,-1,-1)}.to raise_error('Can not add token: -1 is out of x range (10) - -1 is out of y range (10)')
+  end
+
 end

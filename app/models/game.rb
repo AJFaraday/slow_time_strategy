@@ -2,7 +2,6 @@ class Game
 
   attr_reader :grid, :players
 
-  PHASES = %i{calculate_damage enact_damage calculate_movement enact_movement}
 
   def initialize(config_name)
     file_path = File.join(__dir__, '../../config/games/', "#{config_name}.yml")

@@ -7,4 +7,12 @@ class Walker < Token
     super(x, y, owner, grid)
   end
 
+  def calculate_damage
+    raise "calculate_damage not yet implemented on Walker"
+  end
+
+  def calculate_movement
+    raise "calculate_movement not yet implemented on Walker"
+  end
+
 end

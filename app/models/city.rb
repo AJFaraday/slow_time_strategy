@@ -7,4 +7,12 @@ class City < Token
     super(x, y, owner, grid)
   end
 
+  def calculate_damage
+    raise "calculate_damage not yet implemented on City"
+  end
+
+  def calculate_movement
+    raise "calculate_movement not yet implemented on City"
+  end
+
 end

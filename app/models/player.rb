@@ -8,7 +8,7 @@ class Player
   end
 
   def method_missing(meth, *args, &block)
-    if %i[calculate_movement enact_movement calculate_damage enact_damage].include?(meth)
+    if Turn::PHASES.include?(meth)
       tokens.each{|t|t.send(meth)}
     else
       super

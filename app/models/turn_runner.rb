@@ -1,14 +1,12 @@
-class Turn
+class TurnRunner
 
   PHASES = %i{calculate_damage enact_changes calculate_movement enact_changes}
 
-  attr_reader :game, :grid, :players
-  attr_accessor :changes
+  attr_reader :game, :changes
 
   def initialize(game)
     @game = game
     @grid = game.grid
-    @players = game.players
     @changes = []
   end
 
@@ -17,11 +15,11 @@ class Turn
   end
 
   def calculate_damage
-    @changes = game.tokens.map(&:calculate_damage)
+    @changes = @grid.tokens.map(&:calculate_damage).flatten.compact
   end
 
   def calculate_movement
-    @changes = game.tokens.map(&:calculate_movement)
+    @changes = @grid.tokens.map(&:calculate_movement).flatten.compact
   end
 
   def enact_changes

@@ -1,8 +1,8 @@
-require_relative('../../lib/environment')
+require_relative('../../environment')
 
 describe Grid do
 
-  let(:grid) { Grid.new(10, 10) }
+  let(:grid) { Grid.new(10, 10, OpenStruct.new) }
 
   it 'adds a valid token' do
     grid.add_token(1, 2)
@@ -60,7 +60,7 @@ describe Grid do
 
   it 'is fast' do
     require 'benchmark'
-    grid = Grid.new(1_000_000, 1_000_000)
+    grid = Grid.new(1_000_000, 1_000_000, OpenStruct.new)
     grid.add_token(999999,999999)
     grid.add_token(10,10)
     grid.add_token(12,12)

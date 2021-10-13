@@ -3,16 +3,24 @@ class City < Token
   attr_accessor :health
 
   def initialize(x, y, owner, grid=nil)
-    @health = 10
     super(x, y, owner, grid)
-  end
-
-  def calculate_damage
-    raise "calculate_damage not yet implemented on City"
+    @health = 10
   end
 
   def calculate_movement
-    raise "calculate_movement not yet implemented on City"
+    if (@grid.game.turn % @grid.game.config.spawn_interval) == 0
+      target, target_x, target_y = next_step
+      if target
+        if target.owner == owner
+          -> {target.heal(1)}
+        else
+          # This shouldn't actually happen
+          -> {target.damage(1)}
+        end
+      else
+        -> {@grid.add_token(target_x, target_y, Walker, owner)}
+      end
+    end
   end
 
 end

@@ -1,10 +1,11 @@
 class Grid
 
-  attr_accessor :tokens, :x_size, :y_size
+  attr_accessor :tokens, :x_size, :y_size, :game
 
-  def initialize(x_size, y_size)
+  def initialize(x_size, y_size, game)
     @x_size = x_size
     @y_size = y_size
+    @game= game
     @x_index = []
     @y_index = []
     @tokens = []

@@ -1,19 +1,20 @@
 class Game
 
-  attr_reader :grid, :players
-
+  attr_reader :grid, :players, :turn, :config
 
   def initialize(config_name)
     file_path = File.join(__dir__, '../../config/games/', "#{config_name}.yml")
     @config = OpenStruct.new(YAML.load_file(file_path))
-    @grid = Grid.new(@config.x_size, @config.y_size)
+    @grid = Grid.new(@config.x_size, @config.y_size, self)
     @players = []
+    @turn = 0
   end
 
   def add_player(colour='#000000')
     position = find_vacant_position
     if position
       player = Player.new(colour)
+      player.direction = position['direction']
       @players << player
       grid.add_token(
         position['x'],
@@ -27,7 +28,16 @@ class Game
     end
   end
 
+  def take_turn
+    turn_runner.perform
+    @turn += 1
+  end
+
   private
+
+  def turn_runner
+    @turn_runner ||= TurnRunner.new(self)
+  end
 
   def find_vacant_position
     positions = @config.starting_positions.dup

@@ -102,6 +102,7 @@ describe Grid do
     grid.move_token(2,2, 2,3)
     expect(grid.token_at(2,2)).to be_nil
     expect(grid.token_at(2,3)).to be_a(Token)
+    expect(grid.tokens).to include(grid.token_at(2,3))
   end
 
   it "doesn't move a token on top of another token" do

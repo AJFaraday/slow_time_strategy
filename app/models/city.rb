@@ -2,7 +2,7 @@ class City < Token
 
   attr_accessor :health
 
-  def initialize(x, y, owner, grid=nil)
+  def initialize(x, y, owner, grid = nil)
     super(x, y, owner, grid)
     @health = 10
   end
@@ -12,13 +12,17 @@ class City < Token
       target, target_x, target_y = next_step
       if target
         if target.owner == owner
-          -> {target.heal(1)}
+          -> { target.heal(1) }
         else
           # This shouldn't actually happen
-          -> {target.damage(1)}
+          -> { target.damage(1) }
         end
       else
-        -> {@grid.add_token(target_x, target_y, Walker, owner)}
+        if @grid.in_range?(target_x, target_y)
+          -> do
+            @grid.add_token(target_x, target_y, Walker, owner)
+          end
+        end
       end
     end
   end

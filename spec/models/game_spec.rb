@@ -67,4 +67,12 @@ describe Game do
     expect(game.grid.token_at(11, 7).owner).to eq(game.players[1])
   end
 
+  it 'makes a game happen for a while' do
+    game.add_player('#000000')
+    game.add_player('#FF0000')
+    100.times{game.take_turn}
+    puts game.grid.tokens
+             .map{|t| "#{t.owner.colour} #{t.x}:#{t.y} - #{t.class}" }
+  end
+
 end

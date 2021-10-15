@@ -5,13 +5,13 @@ class Grid
   def initialize(x_size, y_size, game)
     @x_size = x_size
     @y_size = y_size
-    @game= game
+    @game = game
     @x_index = []
     @y_index = []
     @tokens = []
   end
 
-  def add_token(x, y, type=nil, owner=Player.new)
+  def add_token(x, y, type = nil, owner = Player.new)
     token = (type || Token).new(x, y, owner, self)
 
     check_token(token)
@@ -21,11 +21,11 @@ class Grid
     token
   end
 
-  def remove_token(x, y)
+  def remove_token(x, y, out_of_game = true)
     token = token_at(x, y)
     @x_index[x].delete(token)
     @y_index[y].delete(token)
-    @tokens -= [token]
+    @tokens -= [token] if out_of_game
   end
 
   def place_token(token, x, y)
@@ -37,7 +37,7 @@ class Grid
   def move_token(x1, y1, x2, y2)
     token = token_at(x1, y1)
     if token
-      remove_token(x1, y1)
+      remove_token(x1, y1, false)
       place_token(token, x2, y2)
       check_token(token)
     end
@@ -54,6 +54,10 @@ class Grid
     (in_x && in_y) ? in_x & in_y : []
   end
 
+  def in_range?(x, y)
+    in_x_range?(x) && in_y_range?(y)
+  end
+
   private
 
   def add_token_to_indexes(token)
@@ -66,10 +70,10 @@ class Grid
 
   def check_token(token)
     errors = []
-    if token.x < 0 || token.x >= x_size
+    if !in_x_range?(token.x)
       errors << "#{token.x} is out of x range (#{x_size})"
     end
-    if token.y < 0 || token.y >= y_size
+    if !in_y_range?(token.y)
       errors << "#{token.y} is out of y range (#{y_size})"
     end
     if token_at(token.x, token.y) && token_at(token.x, token.y) != token
@@ -80,4 +84,11 @@ class Grid
     end
   end
 
+  def in_x_range?(x)
+    x >= 0 && x < x_size
+  end
+
+  def in_y_range?(y)
+    y >= 0 && y < y_size
+  end
 end

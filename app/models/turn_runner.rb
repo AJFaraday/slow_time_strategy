@@ -14,6 +14,10 @@ class TurnRunner
     PHASES.each { |phase| send(phase)}
   end
 
+  def start_turn
+    @grid.tokens.map(&:start_turn).flatten.compact
+  end
+
   def calculate_damage
     @changes = @grid.tokens.map(&:calculate_damage).flatten.compact
   end

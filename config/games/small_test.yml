@@ -1,0 +1,12 @@
+x_size: 5
+y_size: 7
+spawn_interval: 3
+starting_positions:
+  -
+    x: 2
+    y: 2
+    direction: E
+  -
+    x: 12
+    y: 7
+    direction: W

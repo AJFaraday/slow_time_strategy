@@ -33,6 +33,12 @@ class Game
     @turn += 1
   end
 
+  # Mostly for debugging purposes
+  def draw_to_console
+    @terminal_renderer ||= Terminal::Renderer.new(self)
+    @terminal_renderer.draw
+  end
+
   private
 
   def turn_runner

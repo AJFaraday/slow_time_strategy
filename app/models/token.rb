@@ -2,7 +2,8 @@ class Token
 
   include Directions
 
-  attr_accessor :x, :y, :owner, :health
+  # initial health is the health of this token at the start of any given turn
+  attr_accessor :x, :y, :owner, :health, :initial_health
 
   def initialize(x, y, owner, grid = nil)
     @x = x
@@ -15,8 +16,9 @@ class Token
   end
 
   def calculate_damage
+    initial_health = @health
     adjacent_enemies.map do |enemy|
-      -> { enemy.damage(self.health) }
+      -> { self.fight(enemy, initial_health, false) }
     end
   end
 
@@ -24,11 +26,21 @@ class Token
     raise "calculate_movement called on Token, should be City or Walker"
   end
 
+  # This must be symmetrical!
+  def fight(other, initial_health, walking = true)
+    self.damage(other.health)
+    other.damage(initial_health)
+    if self.health > 0 && walking
+      @grid.move_token(self.x, self.y, other.x, other.y)
+    end
+  end
+
   def damage(amount)
     @health -= amount
     if @health <= 0
       @owner.tokens.delete(self)
       @grid.remove_token(x, y)
+      @health = 0
     end
   end
 
@@ -50,6 +62,5 @@ class Token
     target_y = @y + dir_y
     return @grid.token_at(target_x, target_y), target_x, target_y
   end
-
 
 end

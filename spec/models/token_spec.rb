@@ -33,6 +33,7 @@ describe Token do
   # ..b.b
   it "returns a method to damage it's neighbours" do
     game = Game.new('test')
+
     player1 = game.add_player('#000000')
     player2 = game.add_player('#FF0000')
     friendly_token = game.grid.add_token(1,0, Walker, player1)
@@ -60,8 +61,8 @@ describe Token do
 
     expect(friendly_token.health).to eq(1)
     expect(game.grid.token_at(1,0)).to eq(friendly_token)
-    expect(attacking_token.health).to eq(6)
-    expect(enemy1.health).to eq(-1)
+    expect(attacking_token.health).to eq(0) # = 6 - 15 both enemy's healths
+    expect(enemy1.health).to eq(0)
     expect(game.grid.token_at(2, 1)).to be_nil
     expect(enemy2.health).to eq(4)
     expect(safe_enemy.health).to eq(1)

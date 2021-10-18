@@ -1,13 +1,13 @@
-x_size: 15
-y_size: 10
+x_size: 100
+y_size: 100
 spawn_interval: 3
-turn_time: 0
+turn_time: 0.1
 starting_positions:
   -
     x: 2
     y: 2
     direction: E
   -
-    x: 12
-    y: 7
+    x: 97
+    y: 97
     direction: W

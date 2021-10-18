@@ -1,4 +1,4 @@
-require_relative('../../environment')
+require_relative('../environment')
 
 describe 'scenarios' do
 
@@ -76,7 +76,7 @@ describe 'scenarios' do
   +------------------------------------------------------------+
 =end
   # The walker with 6 should fight each 2 in turn and end up with 2 (6 - 2 - 2)
-
+  # The bug is that fights happen twice, so it actually gets reduced by 8 and destroyed.
   it "B: only carries out fights once" do
     game = Game.new('test')
     game.add_player('red')
@@ -93,15 +93,46 @@ describe 'scenarios' do
     enemy1.health = 2
     enemy2.health = 2
 
-    game.draw_to_console
     game.take_turn
-    game.draw_to_console
 
     expect(game.grid.token_at(6,5)).to be_nil
-    expect(game.grid.token_at(7,5)).to be_nil
+    expect(game.grid.token_at(7,5)).to eq(walker)
     expect(game.grid.token_at(7,6)).to be_nil
-    expect(game.grid.tokens).to include(walker)
     expect(walker.health).to eq(2)
+    expect(game.grid.tokens).to include(walker)
+  end
+
+=begin
+  +------------------------------------------------------------+
+  |                                                            |
+  |                                                            |
+  |                                                            |
+  |                                                            |
+  |                                                            |
+  |                    0C10    1C10                            |
+  |                                                            |
+  |                                                            |
+  |                                                            |
+  |                                                            |
+  +------------------------------------------------------------+
+=end
+
+  it "C: two cities spawning to the same spot" do
+    game = Game.new('test')
+    game.add_player('red')
+    game.add_player('green')
+    game.players[0].direction = 'E'
+    game.players[1].direction = 'W'
+    game.grid.remove_token(2, 2)
+    game.grid.remove_token(12, 7)
+
+    city1 = game.grid.add_token(5, 5, City, game.players[0])
+    city2 = game.grid.add_token(7, 5, City, game.players[1])
+
+    game.draw_to_console
+    expect{game.take_turn}.not_to raise_error
+    game.draw_to_console
+    expect(game.grid.token_at(6,5)).to be_nil
   end
 
 end

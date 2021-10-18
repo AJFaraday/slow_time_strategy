@@ -154,7 +154,8 @@ describe Walker do
     walker.calculate_movement.call
     expect(game.grid.token_at(0, 2)).to be_nil
     expect(game.grid.token_at(1, 2)).to be(walker)
-    expect(walker.calculate_movement).to be_nil # no method here
+    walker.calculate_movement.call
+    expect(game.grid.token_at(1, 2)).to be(walker)
   end
 
   it 'kills both walkers when two of them meet' do

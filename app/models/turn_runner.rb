@@ -1,6 +1,6 @@
 class TurnRunner
 
-  PHASES = %i{calculate_damage enact_changes calculate_movement enact_changes}
+  PHASES = %i{start_turn calculate_damage enact_changes calculate_movement enact_changes}
 
   attr_reader :game, :changes
 

@@ -1,6 +1,7 @@
 x_size: 15
 y_size: 10
 spawn_interval: 3
+turn_time: 0.1
 starting_positions:
   -
     x: 2

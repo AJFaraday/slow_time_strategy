@@ -75,4 +75,15 @@ describe Game do
              .map{|t| "#{t.owner.colour} #{t.x}:#{t.y} - #{t.class}" }
   end
 
+  it 'has a shortcut to drawing to the console' do
+    expect{game.draw_to_console}.not_to raise_error
+  end
+
+  it 'takes exactly 10ms to take a turn' do
+    game.config.turn_time = 0.01
+    t = Time.now
+    game.timed_turn
+    expect(Time.now - t).to be_within(0.001).of(0.01)
+  end
+
 end

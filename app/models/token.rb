@@ -3,7 +3,7 @@ class Token
   include Directions
 
   # initial health is the health of this token at the start of any given turn
-  attr_accessor :x, :y, :owner, :health, :initial_health
+  attr_accessor :x, :y, :owner, :health, :initial_health, :fought_in_turn
 
   def initialize(x, y, owner, grid = nil)
     @x = x
@@ -13,6 +13,11 @@ class Token
     @game = grid.game if grid.respond_to?(:game)
     # Always overridden
     @health = 1000
+    @fought_in_turn = []
+  end
+
+  def start_turn
+    @fought_in_turn.clear
   end
 
   def calculate_damage
@@ -28,10 +33,14 @@ class Token
 
   # This must be symmetrical!
   def fight(other, initial_health, walking = true)
-    self.damage(other.health)
-    other.damage(initial_health)
-    if self.health > 0 && walking
-      @grid.move_token(self.x, self.y, other.x, other.y)
+    unless fought_in_turn.include?(other)
+      self.fought_in_turn << other
+      other.fought_in_turn << self
+      self.damage(other.health)
+      other.damage(initial_health)
+      if self.health > 0 && walking
+        @grid.move_token(self.x, self.y, other.x, other.y)
+      end
     end
   end
 
@@ -60,7 +69,7 @@ class Token
     dir_x, dir_y = direction(owner.direction)
     target_x = @x + dir_x
     target_y = @y + dir_y
-    return @grid.token_at(target_x, target_y), target_x, target_y
+    return target_x, target_y
   end
 
 end

@@ -1,6 +1,6 @@
 # Roadmap
 
-* Movement rules confirmed with command line (100%)
+
 * Changeable turn time (via game config)
 * precise turn time (correcting interval)
 * Use Gosu for display
@@ -24,11 +24,3 @@ Controls?
 * P, S, R, N - set element
 * Right click
 
-
-### to test
-
-- `Grid#in_range`
-- City spawning towards edge, no error
-- Cities healing?!?
-- `Token#fight`?
-_ two opposing walkers face off

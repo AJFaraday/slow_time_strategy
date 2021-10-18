@@ -8,31 +8,23 @@ class Walker < Token
   end
 
   def calculate_movement
-    target, target_x, target_y = next_step
+    target_x, target_y = next_step
     initial_health = @health
-    if target
-      if target.owner == owner
-        if target.is_a?(Walker)
-          -> do
-            target.heal(self.health)
-            @grid.remove_token(@x, @y)
-          end
-        end
-      else
-        -> do
-          self.fight(target, initial_health, true)
-        end
-      end
-    else
-      if @grid.in_range?(target_x, target_y)
-        -> do
-          if @grid.token_at(target_x, target_y)
-            self.fight(@grid.token_at(target_x, target_y), initial_health, true)
+    if @grid.in_range?(target_x, target_y)
+      -> do
+        target = @grid.token_at(target_x, target_y)
+        if target
+          if target.owner == self.owner
+            if target.is_a?(Walker)
+              target.heal(initial_health)
+              @grid.remove_token(x, y, true)
+            end
           else
-            @grid.move_token(@x, @y, target_x, target_y)
+            self.fight(@grid.token_at(target_x, target_y), initial_health, true)
           end
+        else
+          @grid.move_token(@x, @y, target_x, target_y)
         end
-      else
       end
     end
   end

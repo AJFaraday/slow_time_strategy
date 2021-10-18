@@ -9,17 +9,17 @@ class City < Token
 
   def calculate_movement
     if (@grid.game.turn % @grid.game.config.spawn_interval) == 0
-      target, target_x, target_y = next_step
-      if target
-        if target.owner == owner
-          -> { target.heal(1) }
-        else
-          # This shouldn't actually happen
-          -> { target.damage(1) }
-        end
-      else
-        if @grid.in_range?(target_x, target_y)
-          -> do
+      target_x, target_y = next_step
+      if @grid.in_range?(target_x, target_y)
+        -> do
+          target = @grid.token_at(target_x, target_y)
+          if target
+            if target.owner == owner
+              target.heal(1)
+            else
+              target.damage(1)
+            end
+          else
             @grid.add_token(target_x, target_y, Walker, owner)
           end
         end

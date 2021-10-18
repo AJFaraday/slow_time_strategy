@@ -39,6 +39,19 @@ class Game
     @terminal_renderer.draw
   end
 
+  def timed_turn
+    turn_start = Time.now
+    take_turn
+    turn_length = Time.now - turn_start
+    sleep (@config.turn_time) - (turn_length/1000)
+  end
+
+  def run
+    loop do
+      timed_turn
+    end
+  end
+
   private
 
   def turn_runner

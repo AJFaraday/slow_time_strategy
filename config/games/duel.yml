@@ -6,7 +6,7 @@ starting_positions:
   -
     x: 2
     y: 2
-    direction: E
+    direction: N
   -
     x: 12
     y: 7

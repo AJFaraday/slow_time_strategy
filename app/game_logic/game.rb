@@ -1,13 +1,28 @@
 class Game
 
-  attr_reader :grid, :players, :turn, :config
+  attr_reader :grid, :players, :config, :name
+  attr_accessor :turn
 
   def initialize(config_name)
     file_path = File.join(__dir__, '../../config/games/', "#{config_name}.yml")
+    @name = config_name
     @config = OpenStruct.new(YAML.load_file(file_path))
     @grid = Grid.new(@config.x_size, @config.y_size, self)
     @players = []
     @turn = 0
+    @reporters = []
+  end
+
+  def add_reporter(reporter)
+    @reporters << reporter
+  end
+
+  def report(action, opts)
+    @reporters.each do |reporter|
+      if reporter.respond_to?(action)
+        reporter.send(action, opts)
+      end
+    end
   end
 
   def add_player(colour='#000000')
@@ -16,12 +31,13 @@ class Game
       player = Player.new(colour)
       player.direction = position['direction']
       @players << player
-      grid.add_token(
+      city = grid.add_token(
         position['x'],
         position['y'],
         City,
         player
       )
+      report(:add_token, {game_token: city})
       player
     else
       raise "No positions left"
@@ -52,11 +68,11 @@ class Game
     end
   end
 
-  private
-
   def turn_runner
     @turn_runner ||= TurnRunner.new(self)
   end
+
+  private
 
   def find_vacant_position
     positions = @config.starting_positions.dup

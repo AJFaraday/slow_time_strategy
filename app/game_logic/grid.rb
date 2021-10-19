@@ -23,6 +23,7 @@ class Grid
 
   def remove_token(x, y, out_of_game = true)
     token = token_at(x, y)
+    #@game.report(:remove_token, {game_token: token}) if out_of_game
     @x_index[x].delete(token)
     @y_index[y].delete(token)
     @tokens -= [token] if out_of_game
@@ -39,6 +40,7 @@ class Grid
     if token
       remove_token(x1, y1, false)
       place_token(token, x2, y2)
+      @game.report(:move_token, {game_token: token, x: x2, y: y2})
       check_token(token)
     end
   end

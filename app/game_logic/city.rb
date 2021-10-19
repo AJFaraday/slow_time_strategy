@@ -20,7 +20,8 @@ class City < Token
               target.damage(1)
             end
           else
-            @grid.add_token(target_x, target_y, Walker, owner)
+            walker = @grid.add_token(target_x, target_y, Walker, owner)
+            @game.report(:add_token, {game_token: walker, from: self})
           end
         end
       end

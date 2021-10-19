@@ -18,6 +18,7 @@ class Walker < Token
             if target.is_a?(Walker)
               target.heal(initial_health)
               @grid.remove_token(x, y, true)
+              @game.report(:remove_token, { game_token: self, to: target })
             end
           else
             self.fight(@grid.token_at(target_x, target_y), initial_health, true)
@@ -33,8 +34,10 @@ class Walker < Token
     @health += amount
     if @health >= 10
       @grid.remove_token(x, y)
+      @game.report(:remove_token, {game_token: self})
       @owner.tokens.delete(self)
-      @grid.add_token(x, y, City, owner)
+      city = @grid.add_token(x, y, City, owner)
+      @game.report(:add_token, { game_token: city })
     end
   end
 

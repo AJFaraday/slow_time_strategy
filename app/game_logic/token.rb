@@ -49,6 +49,7 @@ class Token
     if @health <= 0
       @owner.tokens.delete(self)
       @grid.remove_token(x, y)
+      @game.report(:remove_token, {game_token: self})
       @health = 0
     end
   end
